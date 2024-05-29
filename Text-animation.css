@@ -1,0 +1,92 @@
+:root {
+	--background: #f3a683;
+	--base: #303952;
+	--accent: #786fa6;
+	--shadow: #e77f67;
+}
+
+html {
+	background: var(--background);
+	display: grid;
+	height: 100%;
+	place-items: center;
+}
+
+.cool {
+	font: bold 3rem/1.2 sans-serif;
+	max-width: 20rem;
+
+	span {
+		color: var(--shadow);
+		display: inline-block;
+		position: relative;
+
+		/* // Setting the stagger "by hand". You have to know the number of children beforehand and loop through them all, or set staggers only for a number of first children. Or set it with js */
+		@for $i from 1 through 10 {
+			&:nth-child(#{$i}) {
+				&::before,
+				&::after {
+					animation-delay: #{$i / 10}s;
+				}
+			}
+		}
+
+		/* // make the font black again if no animation is playing */
+		@media (prefers-reduced-motion) {
+			color: var(--base);
+		}
+
+		/* // the magic, kinda */
+		&::before {
+			animation: max-height 1.6s cubic-bezier(0.61, 1, 0.88, 1) 1 normal both;
+			color: var(--accent);
+		}
+		
+		&::after {
+			animation: max-width 2.8s cubic-bezier(0.61, 1, 0.88, 1) 1 normal both;
+			color: var(--base);
+		}
+		
+		&::before,
+		&::after {
+			/* // Using data attribute to avoid duplicated content in HTML. It has a very good support when used in the content property https://caniuse.com/mdn-css_types_attr */
+			content: attr(data-text);
+			left: 0;
+			/* // The overflowing text is cut off */
+			overflow: hidden;
+			position: absolute;
+			/* // Set the speak property to none, because we don't want screen readers to read every word in the paragraph twice. "Hello, hello"? No! */
+			speak: none;
+
+			/* // In thi+s case we just don't animate things, BUT we can maybe animate opacity only since reduced motion != no motion */
+			@media (prefers-reduced-motion) {
+				animation: none;
+				content: "";
+			}
+		}
+	}
+}
+
+@keyframes max-width {
+	from {
+		max-width: 0;
+	}
+	to {
+		max-width: 100%;
+	}
+}
+
+@keyframes max-height {
+	from {
+		max-height: 0;
+	}
+	to {
+		max-height: 100%;
+	}
+}
+
+
+
+
+/* p */
+
